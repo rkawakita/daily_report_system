@@ -25,7 +25,7 @@ public class EmployeeConverter {
                     : ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()
                         ? JpaConst.EMP_DEL_TRUE
                         : JpaConst.EMP_DEL_FALSE);
-                                                       )
+
     }
 
     public static EmployeeView toView(Employee e) {
