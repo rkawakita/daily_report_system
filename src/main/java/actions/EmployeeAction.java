@@ -102,4 +102,53 @@ public class EmployeeAction extends ActionBase{
         forward(ForwardConst.FW_EMP_SHOW);
     }
 
+    public void edit() throws ServletException, IOException {
+        EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+
+        if (ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue() ) {
+            forward(ForwardConst.FW_ERR_UNKNOWN);
+            return ;
+        }
+
+        putRequestScope(AttributeConst.TOKEN,getTokenId());
+        putRequestScope(AttributeConst.EMPLOYEE,ev);
+
+        forward(ForwardConst.FW_EMP_EDIT);
+    }
+
+    public void update() throws ServletException,IOException {
+        if ( checkToken()) {
+            EmployeeView ev = new EmployeeView(
+                    toNumber(getRequestParam(AttributeConst.EMP_ID)),
+                    getRequestParam(AttributeConst.EMP_CODE),
+                    getRequestParam(AttributeConst.EMP_NAME),
+                    getRequestParam(AttributeConst.EMP_PASS),
+                    toNumber(getRequestParam(AttributeConst.EMP_ADMIN_FLG)),
+                    null,
+                    null,
+                    AttributeConst.DEL_FLAG_FALSE.getIntegerValue());
+
+            String pepper = getContextScope(PropertyConst.PEPPER);
+
+            List<String> errors = service.update(ev,pepper);
+
+            if (errors.size() > 0 ) {
+
+                putRequestScope(AttributeConst.TOKEN,getTokenId());
+                putRequestScope(AttributeConst.EMPLOYEE,ev);
+                putRequestScope(AttributeConst.ERR,errors);
+
+                forward(ForwardConst.FW_EMP_EDIT);
+            } else {
+                putSessionScope(AttributeConst.FLUSH,MessageConst.I_UPDATED.getMessage());
+
+                redirect(ForwardConst.ACT_EMP,ForwardConst.CMD_INDEX);
+            }
+
+        }
+    }
+
+
+
+
 }
