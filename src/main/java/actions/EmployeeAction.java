@@ -29,34 +29,34 @@ public class EmployeeAction extends ActionBase{
     public void index() throws ServletException,IOException {
 
         if(checkAdmin()) {
-        int page = getPage();
+            int page = getPage();
 
-        List<EmployeeView> employees = service.getPerPage(page);
+            List<EmployeeView> employees = service.getPerPage(page);
 
-        long employeeCount = service.countAll();
+            long employeeCount = service.countAll();
 
-        putRequestScope(AttributeConst.EMPLOYEES,employees);
-        putRequestScope(AttributeConst.EMP_COUNT,employeeCount);
-        putRequestScope(AttributeConst.PAGE,page);
-        putRequestScope(AttributeConst.MAX_ROW,JpaConst.ROW_PER_PAGE);
+            putRequestScope(AttributeConst.EMPLOYEES,employees);
+            putRequestScope(AttributeConst.EMP_COUNT,employeeCount);
+            putRequestScope(AttributeConst.PAGE,page);
+            putRequestScope(AttributeConst.MAX_ROW,JpaConst.ROW_PER_PAGE);
 
-        String flush = getSessionScope(AttributeConst.FLUSH);
-        if (flush != null ) {
-            putRequestScope(AttributeConst.FLUSH,flush);
-            removeSessionScope(AttributeConst.FLUSH);
-        }
+            String flush = getSessionScope(AttributeConst.FLUSH);
+            if (flush != null ) {
+                putRequestScope(AttributeConst.FLUSH,flush);
+                removeSessionScope(AttributeConst.FLUSH);
+            }
 
-        forward(ForwardConst.FW_EMP_INDEX);
+            forward(ForwardConst.FW_EMP_INDEX);
         }
 
     }
 
     public void entryNew() throws ServletException,IOException {
         if(checkAdmin()) {
-        putRequestScope(AttributeConst.TOKEN,getTokenId());
-        putRequestScope(AttributeConst.EMPLOYEE,new EmployeeView());
+            putRequestScope(AttributeConst.TOKEN,getTokenId());
+            putRequestScope(AttributeConst.EMPLOYEE,new EmployeeView());
 
-        forward(ForwardConst.FW_EMP_NEW);
+            forward(ForwardConst.FW_EMP_NEW);
         }
     }
 
@@ -95,32 +95,32 @@ public class EmployeeAction extends ActionBase{
     public void show() throws ServletException,IOException {
         if(checkAdmin()) {
 
-        EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+            EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
-        if ( ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()) {
-            forward(ForwardConst.FW_ERR_UNKNOWN);
-            return;
-        }
+            if ( ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()) {
+                forward(ForwardConst.FW_ERR_UNKNOWN);
+                return;
+            }
 
-        putRequestScope(AttributeConst.EMPLOYEE, ev );
+            putRequestScope(AttributeConst.EMPLOYEE, ev );
 
-        forward(ForwardConst.FW_EMP_SHOW);
+            forward(ForwardConst.FW_EMP_SHOW);
         }
     }
 
     public void edit() throws ServletException, IOException {
         if(checkAdmin()) {
-        EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+            EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
-        if (ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue() ) {
-            forward(ForwardConst.FW_ERR_UNKNOWN);
-            return ;
-        }
+            if (ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue() ) {
+                forward(ForwardConst.FW_ERR_UNKNOWN);
+                return ;
+            }
 
-        putRequestScope(AttributeConst.TOKEN,getTokenId());
-        putRequestScope(AttributeConst.EMPLOYEE,ev);
+            putRequestScope(AttributeConst.TOKEN,getTokenId());
+            putRequestScope(AttributeConst.EMPLOYEE,ev);
 
-        forward(ForwardConst.FW_EMP_EDIT);
+            forward(ForwardConst.FW_EMP_EDIT);
         }
     }
 
