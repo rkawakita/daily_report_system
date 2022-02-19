@@ -96,12 +96,20 @@ public class ReportAction extends ActionBase {
         }
     }
 
-    public void clearFlush() throws ServletException,IOException {
-        removeSessionScope(AttributeConst.FLUSH);
-        redirect(ForwardConst.ACT_REP,ForwardConst.CMD_INDEX);
 
+    public void show() throws ServletException,IOException {
+
+        ReportView rv = service.findOne(toNumber(getRequestParam(AttributeConst.REP_ID)));
+
+        if (rv == null) {
+            forward(ForwardConst.FW_ERR_UNKNOWN);
+
+        } else {
+            putRequestScope(AttributeConst.REPORT,rv);
+
+            forward(ForwardConst.FW_REP_SHOW);
+        }
     }
-
 
 
 
